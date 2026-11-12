@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default LSPosed scope. Users can prune this in the manager; the module
+         also refuses anything not present in config.json's package map. -->
+    <string-array name="xposed_scope">
+        <item>com.tencent.ig</item>
+        <item>com.pubg.imobile</item>
+        <item>com.pubg.krmobile</item>
+        <item>com.rekoo.pubgm</item>
+        <item>com.vng.pubgmobile</item>
+        <item>com.tencent.tmgp.pubgmhd</item>
+        <item>com.pubg.newstate</item>
+        <item>com.aida64</item>
+        <item>ru.andr7e.deviceinfohw</item>
+    </string-array>
+</resources>

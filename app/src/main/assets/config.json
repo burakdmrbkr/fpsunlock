@@ -1,0 +1,90 @@
+{
+  "_comment": "fpsunlock config. Resolution order: /data/local/tmp/fpsunlock.json > this asset > compiled defaults in Config.java. Keep this file and Config.defaults() in sync.",
+
+  "version": 2,
+  "active": "S24U",
+  "tier": "L2",
+  "probe": false,
+
+  "refresh": {
+    "enabled": true,
+    "hz": 120.0,
+    "forceWindow": false
+  },
+
+  "native": {
+    "enabled": false
+  },
+
+  "packages": {
+    "com.tencent.ig": "S24U",
+    "com.pubg.imobile": "S24U",
+    "com.pubg.krmobile": "S24U",
+    "com.rekoo.pubgm": "S24U",
+    "com.vng.pubgmobile": "S24U",
+    "com.tencent.tmgp.pubgmhd": "S24U",
+    "com.pubg.newstate": "S24U",
+    "com.tencent.igfit": "S24U",
+
+    "com.aida64": "S24U",
+    "ru.andr7e.deviceinfohw": "S24U"
+  },
+
+  "profiles": {
+    "S24U": {
+      "manufacturer": "samsung",
+      "brand": "samsung",
+      "model": "SM-S928B",
+      "device": "e3q",
+      "product": "e3qxxx",
+      "soc_model": "SM8650",
+      "soc_manufacturer": "QTI",
+      "hardware": "qcom",
+      "board": "pineapple",
+      "screen": { "width": 1440, "height": 3120, "density": 450 },
+      "fingerprint": "samsung/e3qxxx/e3q:14/UP1A.231005.007/S928BXXU1AXBA:user/release-keys"
+    },
+
+    "SM_X910": {
+      "manufacturer": "samsung",
+      "brand": "samsung",
+      "model": "SM-X910",
+      "device": "gts9uwifi",
+      "product": "gts9uwifixx",
+      "soc_model": "SM8550",
+      "soc_manufacturer": "QTI",
+      "hardware": "qcom",
+      "board": "kalama",
+      "screen": { "width": 1848, "height": 2960, "density": 320 },
+      "fingerprint": "samsung/gts9uwifixx/gts9uwifi:14/UP1A.231005.007/X910XXU1AXBA:user/release-keys"
+    },
+
+    "ROG8": {
+      "manufacturer": "asus",
+      "brand": "asus",
+      "model": "ASUS_AI2401",
+      "device": "AI2401",
+      "product": "WW_AI2401",
+      "soc_model": "SM8650",
+      "soc_manufacturer": "QTI",
+      "hardware": "qcom",
+      "board": "pineapple",
+      "screen": { "width": 1080, "height": 2400, "density": 395 },
+      "fingerprint": "asus/WW_AI2401/AI2401:14/UP1A.231005.007/WW_AI2401_33.0210.0210.200:user/release-keys"
+    },
+
+    "REDMAGIC9P": {
+      "manufacturer": "nubia",
+      "brand": "nubia",
+      "model": "NX769J",
+      "device": "NX769J",
+      "product": "NX769J",
+      "soc_model": "SM8650",
+      "soc_manufacturer": "QTI",
+      "hardware": "qcom",
+      "board": "pineapple",
+      "screen": { "width": 1116, "height": 2480, "density": 387 },
+      "fingerprint": "nubia/NX769J/NX769J:14/UP1A.231005.007/OS9.0.14:user/release-keys"
+    }
+  }
+}

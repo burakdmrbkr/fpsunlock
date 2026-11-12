@@ -1,0 +1,29 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android
+local.properties
+*.iml
+.cxx/
+captures/
+outputs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Signing material — never commit
+*.jks
+*.keystore
+keystore.properties
+
+# Local tooling
+APK/
+*.apk

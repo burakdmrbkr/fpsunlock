@@ -1,0 +1,72 @@
+plugins {
+    id 'com.android.application'
+}
+
+def withNative = project.hasProperty('native') && project.property('native') == 'true'
+
+android {
+    namespace 'dev.nextrounlock.fpsunlock'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'dev.nextrounlock.fpsunlock'
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    if (withNative) {
+        ndkVersion '26.1.10909125'
+        defaultConfig {
+            externalNativeBuild {
+                cmake {
+                    arguments '-DANDROID_STL=c++_static'
+                    abiFilters 'arm64-v8a', 'armeabi-v7a'
+                    cppFlags '-std=c++17'
+                }
+            }
+        }
+        externalNativeBuild {
+            cmake {
+                path file('src/main/cpp/CMakeLists.txt')
+                version '3.22.1'
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    packaging {
+        jniLibs {
+            useLegacyPackaging true
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled true
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
+
+dependencies {
+    compileOnly 'de.robv.android.xposed:api:82'
+}

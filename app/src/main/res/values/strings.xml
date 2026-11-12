@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">fpsunlock</string>
+    <string name="xposed_description">PUBG Mobile 120 FPS unlock — device identity only. Spoofs the model/chipset the native FPS table keys on, plus the display mode surface. No memory edits, no file patches.</string>
+</resources>
