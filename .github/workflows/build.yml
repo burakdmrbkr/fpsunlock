@@ -18,8 +18,16 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      # The ubuntu runner ships an Android SDK; only the platform and build-tools
+      # for this project need adding. Avoids android-actions/setup-android, which
+      # fails on current runner images trying to install the retired 'tools' package.
+      - name: Install Android platform
+        run: |
+          SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK" >> "$GITHUB_ENV"
+          yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
+          "$SDK/cmdline-tools/latest/bin/sdkmanager" "platforms;android-34" "build-tools;34.0.0"
 
       - name: Cache Gradle
         uses: actions/cache@v4
@@ -27,21 +35,16 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle', 'gradle.properties') }}
-
-      - name: Accept SDK licenses
-        run: yes | sdkmanager --licenses > /dev/null || true
-
-      - name: Install platform
-        run: sdkmanager "platforms;android-34" "build-tools;34.0.0"
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle', 'gradle.properties', 'gradle/wrapper/gradle-wrapper.properties') }}
 
       - name: Assemble debug
-        run: gradle :app:assembleDebug --console=plain --no-daemon
+        run: ./gradlew :app:assembleDebug --console=plain --no-daemon
 
       - name: Assemble release
-        run: gradle :app:assembleRelease --console=plain --no-daemon
+        run: ./gradlew :app:assembleRelease --console=plain --no-daemon
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload APKs
+        uses: actions/upload-artifact@v4
         with:
           name: fpsunlock-apk
           path: app/build/outputs/apk/**/*.apk
