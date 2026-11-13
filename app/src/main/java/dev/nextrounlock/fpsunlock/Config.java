@@ -47,6 +47,7 @@ public final class Config {
     public final boolean forceWindowRate;
     public final boolean nativeEnabled;
     public final boolean probeEnabled;
+    public final boolean fpsProbeEnabled;
 
     /** package → profile name, or {@code null} for "explicitly do not touch". */
     private final Map<String, String> packageMap;
@@ -63,6 +64,7 @@ public final class Config {
                    boolean forceWindowRate,
                    boolean nativeEnabled,
                    boolean probeEnabled,
+                   boolean fpsProbeEnabled,
                    Map<String, String> packageMap,
                    Map<String, Profile> profiles) {
         this.source = source;
@@ -73,6 +75,7 @@ public final class Config {
         this.forceWindowRate = forceWindowRate;
         this.nativeEnabled = nativeEnabled;
         this.probeEnabled = probeEnabled;
+        this.fpsProbeEnabled = fpsProbeEnabled;
         this.packageMap = packageMap;
         this.profiles = profiles;
     }
@@ -202,6 +205,7 @@ public final class Config {
         boolean nativeEnabled = nativeObj != null && nativeObj.optBoolean("enabled", false);
 
         boolean probe = root.optBoolean("probe", false);
+        boolean fpsProbe = root.optBoolean("fpsProbe", true);
 
         // profiles
         Map<String, Profile> profiles = new LinkedHashMap<>();
@@ -276,7 +280,7 @@ public final class Config {
         }
 
         return new Config(source, active, tier, refreshEnabled, refreshHz, forceWindow,
-                nativeEnabled, probe, pkgMap, profiles);
+                nativeEnabled, probe, fpsProbe, pkgMap, profiles);
     }
 
     private static Integer optIntOrNull(JSONObject o, String key) {
@@ -346,7 +350,7 @@ public final class Config {
         pkgMap.put("ru.andr7e.deviceinfohw", "S24U");
 
         return new Config(source, "S24U", Profile.Tier.L2,
-                true, 120f, false, false, false,
+                true, 120f, false, false, false, true,
                 pkgMap, profiles);
     }
 
@@ -358,6 +362,7 @@ public final class Config {
                 + " refresh=" + (refreshEnabled ? refreshHz + "Hz" : "off")
                 + " native=" + nativeEnabled
                 + " probe=" + probeEnabled
+                + " fpsProbe=" + fpsProbeEnabled
                 + " profiles=" + profiles.keySet();
     }
 

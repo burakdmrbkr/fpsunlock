@@ -108,6 +108,17 @@ public final class HookEntry implements IXposedHookLoadPackage, IXposedHookZygot
             Probe.install(pkg);
         }
 
+        // 4b. Surface the game's own FPS decisions. On by default: the game logs them
+        // to a UID-private file, not logcat, so without this there is no way to
+        // confirm which native FPS value the device table actually returned.
+        if (config.fpsProbeEnabled) {
+            try {
+                FpsProbe.start(currentApplication());
+            } catch (Throwable t) {
+                XLog.d("fpsprobe", "probe unavailable: " + XLog.describe(t));
+            }
+        }
+
         // 5. Native prop layer (phase 3). Off unless explicitly enabled.
         if (config.nativeEnabled) {
             try {
@@ -157,11 +168,24 @@ public final class HookEntry implements IXposedHookLoadPackage, IXposedHookZygot
     }
 
     /**
+     * Resolves the host process's Application without requiring a Context hook.
+     * Used by {@link FpsProbe}, which needs the game's own UID to read its log file.
+     */
+    private static android.content.Context currentApplication() {
+        try {
+            Class<?> at = Class.forName("android.app.ActivityThread");
+            Object app = at.getMethod("currentApplication").invoke(null);
+            return (android.content.Context) app;
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    /**
      * Self-test: when scoped to our own package, dump the live values so you can
      * confirm the module is loaded and see what the device actually reports.
      */
-    private void reportSelf(XC_LoadPackage.LoadPackageParam lpparam) {
-        Config config = Config.load(modulePath);
+    private void reportSelf(XC_LoadPackage.LoadPackageParam lpparam) {        Config config = Config.load(modulePath);
         XLog.i("=== self-test ===");
         XLog.i("process=" + lpparam.processName + " pid=" + android.os.Process.myPid());
         XLog.i("device=" + BuildSpoofer.snapshot());

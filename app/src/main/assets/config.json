@@ -1,10 +1,11 @@
 {
   "_comment": "fpsunlock config. Resolution order: /data/local/tmp/fpsunlock.json > this asset > compiled defaults in Config.java. Keep this file and Config.defaults() in sync.",
 
-  "version": 2,
+  "version": 3,
   "active": "S24U",
   "tier": "L2",
   "probe": false,
+  "fpsProbe": true,
 
   "refresh": {
     "enabled": true,

@@ -138,31 +138,37 @@ public final class DisplaySpoofer {
         hookMetrics("getMetrics", width, height, density);
         hookMetrics("getRealMetrics", width, height, density);
 
-        // DisplayInfo is reached through getDisplayInfo on some paths.
+        // getDisplayInfo is an out-parameter call on API 29+: DisplayInfo is passed in
+        // and mutated, there is no return value. Hooking "this#getDisplayInfo()" fails.
         try {
-            XposedHelpers.findAndHookMethod(Display.class, "getDisplayInfo",
-                    new XC_MethodHook() {
-                        @Override
-                        protected void afterHookedMethod(MethodHookParam param) {
-                            Object info = param.getResult();
-                            if (info == null) {
-                                return;
-                            }
-                            setFieldIfPresent(info, "logicalWidth", width);
-                            setFieldIfPresent(info, "logicalHeight", height);
-                            setFieldIfPresent(info, "appWidth", width);
-                            setFieldIfPresent(info, "appHeight", height);
-                            setFieldIfPresent(info, "largestNominalAppWidth", width);
-                            setFieldIfPresent(info, "largestNominalAppHeight", height);
-                            setFieldIfPresent(info, "densityDpi", density);
+            XposedBridge.hookAllMethods(Display.class, "getDisplayInfo", new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) {
+                    for (Object arg : param.args) {
+                        if (arg != null && arg.getClass().getSimpleName().equals("DisplayInfo")) {
+                            mutateDisplayInfo(arg, width, height, density);
+                            return;
                         }
-                    });
+                    }
+                }
+            });
+            XLog.d("display:geometry", "getDisplayInfo hooked (out-param form)");
         } catch (Throwable t) {
             XLog.d("display:geometry", "getDisplayInfo not hookable: " + XLog.describe(t));
         }
 
         XLog.d("display:geometry",
                 "screen geometry spoof armed: " + width + "x" + height + "@" + density);
+    }
+
+    private static void mutateDisplayInfo(Object info, int width, int height, int density) {
+        setFieldIfPresent(info, "logicalWidth", width);
+        setFieldIfPresent(info, "logicalHeight", height);
+        setFieldIfPresent(info, "appWidth", width);
+        setFieldIfPresent(info, "appHeight", height);
+        setFieldIfPresent(info, "largestNominalAppWidth", width);
+        setFieldIfPresent(info, "largestNominalAppHeight", height);
+        setFieldIfPresent(info, "densityDpi", density);
     }
 
     // ---- helpers ----------------------------------------------------------
