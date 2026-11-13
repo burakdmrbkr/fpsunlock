@@ -26,6 +26,15 @@ public final class XLog {
     /** Above this many lines for one key, go quiet until the next process. */
     private static final int HOT_KEY_LIMIT = 40;
 
+    /** Keys that opt out of the budget because their volume is bounded by design. */
+    private static final java.util.HashSet<String> UNLIMITED = new java.util.HashSet<>();
+
+    static {
+        UNLIMITED.add("fpsprobe");
+        UNLIMITED.add("fpsprobe:sample");
+        UNLIMITED.add("fpsprobe:scan");
+    }
+
     private static final java.util.HashMap<String, int[]> COUNTERS = new java.util.HashMap<>();
 
     private XLog() {
@@ -70,6 +79,9 @@ public final class XLog {
 
     private static boolean allow(String key) {
         synchronized (COUNTERS) {
+            if (UNLIMITED.contains(key)) {
+                return true;
+            }
             int[] box = COUNTERS.get(key);
             if (box == null) {
                 COUNTERS.put(key, new int[]{1});

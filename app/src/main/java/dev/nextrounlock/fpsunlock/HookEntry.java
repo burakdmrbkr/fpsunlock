@@ -68,6 +68,12 @@ public final class HookEntry implements IXposedHookLoadPackage, IXposedHookZygot
 
         Config config = Config.load(modulePath);
 
+        // Diagnostic at D level: XLog.i also goes through XposedBridge, and if that
+        // path is unavailable we would otherwise get silence with no explanation.
+        XLog.d("dispatch", "dispatch pkg=" + pkg
+                + " target=" + config.isTarget(pkg)
+                + " known=" + config.packageMapView().keySet());
+
         if (!config.isTarget(pkg)) {
             // Not in scope. Silent — this fires for every package LSPosed scopes us to,
             // and logging here would be noise.
@@ -113,7 +119,7 @@ public final class HookEntry implements IXposedHookLoadPackage, IXposedHookZygot
         // confirm which native FPS value the device table actually returned.
         if (config.fpsProbeEnabled) {
             try {
-                FpsProbe.start(currentApplication());
+                FpsProbe.start();
             } catch (Throwable t) {
                 XLog.d("fpsprobe", "probe unavailable: " + XLog.describe(t));
             }
